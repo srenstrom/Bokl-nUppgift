@@ -48,5 +48,12 @@ namespace BoklånUppgift.Repository
             return book;
         }
 
+        public async Task AddAsync(Book book)
+        {
+            var books = await applicationDbContext.Books.AddAsync(book);
+            await applicationDbContext.SaveChangesAsync();
+
+            
+        }
     }
 }
