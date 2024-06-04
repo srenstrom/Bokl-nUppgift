@@ -1,4 +1,7 @@
 using BoklånUppgift.Data;
+using BoklånUppgift.Interface;
+using BoklånUppgift.Model;
+using BoklånUppgift.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +22,10 @@ namespace BoklånUppgift
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddTransient<IBook, BookRepository>();
+            builder.Services.AddTransient<ICategory, CategoryRepository>();
+            builder.Services.AddTransient<IAuthor, AuthorRepository>();
+            builder.Services.AddTransient<IRentalUser, RentalUserRepository>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
