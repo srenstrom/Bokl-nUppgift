@@ -4,8 +4,8 @@ namespace BoklånUppgift.Interface
 {
     public interface IAuthor
     {
-        public Task GetByIdAsync(int id);
-        public Task<Author> GetAllAsync(Author author);
-        public Task<Author> AddAsync(Author author);
+        public Task<Author> GetByIdAsync(int id);
+        public Task<List<Author>> GetAllAsync();
+        public Task AddAsync(Author author);
     }
 }

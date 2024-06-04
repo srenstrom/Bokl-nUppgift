@@ -6,6 +6,7 @@ namespace BoklånUppgift.Interface
     {
         public Task<Book> GetByIdAsync(int id);
         public Task<List<Book>> GetAllAsync();
+        public Task AddAsync(Book book);
         public Task<Book> ReturnBookAsync(int id);
         public Task<Book> RentBookAsync(int id);
 

@@ -1,23 +1,41 @@
-﻿using BoklånUppgift.Interface;
+﻿using BoklånUppgift.Data;
+using BoklånUppgift.Interface;
 using BoklånUppgift.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace BoklånUppgift.Repository
 {
     public class AuthorRepository : IAuthor
     {
-        public Task<Author> AddAsync(Author author)
+        private readonly ApplicationDbContext applicationDbContext;
+
+        public AuthorRepository(ApplicationDbContext applicationDbContext)
         {
-            throw new NotImplementedException();
+            this.applicationDbContext = applicationDbContext;
+        }
+        public async Task AddAsync(Author author)
+        {
+            await applicationDbContext.AddAsync(author);
+            
+            applicationDbContext.SaveChangesAsync();
         }
 
-        public Task<Author> GetAllAsync(Author author)
+        public async Task<List<Author>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await applicationDbContext.Authors
+                .Include(b => b.Books)
+                .ToListAsync();
         }
 
-        public Task GetByIdAsync(int id)
+      
+
+        public async Task<Author> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var author = await applicationDbContext.Authors
+                .Include(b => b.Books)
+                .FirstOrDefaultAsync(s => s.AuthorId == id);
+            return author;
+
         }
     }
 }
