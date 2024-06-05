@@ -16,7 +16,7 @@ namespace BoklånUppgift.Test
                 // You can initialize _client in the constructor
                 _client = new HttpClient();
                 // Assuming your web application is hosted locally, you can set the base address like this:
-                _client.BaseAddress = new Uri("http://localhost:7004"); // Adjust the port as per your application's configuration
+                _client.BaseAddress = new Uri("https://localhost:7004"); // Adjust the port as per your application's configuration
             }
 
             //lokal variabel
@@ -30,6 +30,8 @@ namespace BoklånUppgift.Test
                 var registerData = new FormUrlEncodedContent(new KeyValuePair<string, string>[]
       {
     new KeyValuePair<string, string>("Input.Email", "newuser@example.com"),
+    new KeyValuePair<string, string>("Input.FirstName", "Johanna"),
+    new KeyValuePair<string, string>("Input.LastName", "Test"),
     new KeyValuePair<string, string>("Input.Password", "NewPassword123!"),
     new KeyValuePair<string, string>("Input.ConfirmPassword", "NewPassword123!")
       });

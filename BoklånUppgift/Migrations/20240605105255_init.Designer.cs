@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BoklånUppgift.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240604113041_init")]
+    [Migration("20240605105255_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -70,9 +70,6 @@ namespace BoklånUppgift.Migrations
                     b.Property<DateTime>("RentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("RentalUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -85,8 +82,6 @@ namespace BoklånUppgift.Migrations
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("RentalUserId");
 
                     b.ToTable("Books");
                 });
@@ -129,11 +124,13 @@ namespace BoklånUppgift.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -332,10 +329,6 @@ namespace BoklånUppgift.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BoklånUppgift.Model.RentalUser", null)
-                        .WithMany("Books")
-                        .HasForeignKey("RentalUserId");
-
                     b.Navigation("Author");
 
                     b.Navigation("Category");
@@ -393,11 +386,6 @@ namespace BoklånUppgift.Migrations
                 });
 
             modelBuilder.Entity("BoklånUppgift.Model.Author", b =>
-                {
-                    b.Navigation("Books");
-                });
-
-            modelBuilder.Entity("BoklånUppgift.Model.RentalUser", b =>
                 {
                     b.Navigation("Books");
                 });
