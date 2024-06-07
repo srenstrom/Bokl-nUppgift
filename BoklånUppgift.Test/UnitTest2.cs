@@ -1,9 +1,15 @@
-﻿using BoklånUppgift.Data;
+﻿using BoklånUppgift.Controllers;
+using BoklånUppgift.Data;
+using BoklånUppgift.Interface;
 using BoklånUppgift.Model;
+using BoklånUppgift.Repository;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,11 +19,11 @@ namespace BoklånUppgift.Test
     {
 
         private static DbContextOptions<ApplicationDbContext> dbContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: "StudentDbTest")
+            .UseInMemoryDatabase(databaseName: "BookDatabaseTest")
             .Options;
 
         ApplicationDbContext context;
-    
+
 
         public UnitTest2()
         {
@@ -26,34 +32,46 @@ namespace BoklånUppgift.Test
 
             //Seeda databasen
             SeedDatabase();
-           
+
         }
 
         private void SeedDatabase()
         {
             List<Author> authors = new List<Author>()
     {
-        new Author() { AuthorId = 1, FirstName = "Test", LastName = "Testsson" }
+        new Author() { AuthorId = 1, FirstName = "Lars", LastName = "Kepler" },
+        new Author() { AuthorId = 2, FirstName = "Stephen", LastName = "King" }
 
     };
             // Create categories
             List<Category> categories = new List<Category>()
     {
-        new Category() { CategoryId = 1, CategoryName = "Fiction" },
-        new Category() { CategoryId = 2, CategoryName = "Non-Fiction" },
-        new Category() { CategoryId = 3, CategoryName = "Science" },
-        new Category() { CategoryId = 4, CategoryName = "Fantasy" }
+        new Category() { CategoryId = 1, CategoryName = "Spänning" },
+        new Category() { CategoryId = 3, CategoryName = "Fakta" },
+        new Category() { CategoryId = 4, CategoryName = "Thriller" },
+        new Category() { CategoryId = 5, CategoryName = "Skräck" }
     };
             List<Book> books = new List<Book>()
             {
                 new Book()
                 {
                     BookId=1,
-                    Title="Bok ett",
-                    Description="Kul",
-                    Category=categories[0],
-                    YearOfPublishing=1990,
+                    Title="Sömngångaren",
+                    Description="Sömngångaren är Lars Keplers tionde bok om Joona Linna.",
+                    Category=categories[2],
+                    YearOfPublishing=2024,
                     Author=authors[0],
+                    IsRented=false
+
+                },
+                new Book()
+                {
+                    BookId=2,
+                    Title="Staden som försvann",
+                    Description="Staden som försvann är Stephen Kings andra utgivna roman",
+                    Category=categories[3],
+                    YearOfPublishing=1975,
+                    Author=authors[1],
                     IsRented=false
 
                 }
@@ -67,29 +85,41 @@ namespace BoklånUppgift.Test
         {
             context.Database.EnsureDeleted();
         }
+
         [Fact]
-        public void FindBookSuccess()
+        public async Task GetAllBooksTest()
         {
-            //Arrange
-            Book book;
+            // Arrange
+            var bookRepository = new BookRepository(context);
 
-            //Act
-            book = context.Books.Find(1);
+            // Act
+            List<Book> result = await bookRepository.GetAllAsync();
 
-            //Assert
-            Assert.Equal("Bok ett", book.Title);
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(2, result.Count);
+
+
         }
         [Fact]
-        public void FindBookNotSuccess()
+        public async Task GetBooksByIdTest()
         {
-            //Arrange
-            Book book;
-
-            //Act
-            book = context.Books.Find(1);
-
-            //Assert
-            Assert.Equal("Bok två", book.Title);
+            // Arrange
+            var bookRepository = new BookRepository(context);
+            int id = 2;
+            // Act
+            Book result = await bookRepository.GetByIdAsync(id);
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(2, result.BookId);
+            Assert.Equal("Staden som försvann", result.Title);
+            Assert.Equal("Skräck", result.Category.CategoryName);
+            Assert.Equal("Stephen King", $"{result.Author.FirstName} {result.Author.LastName}");
+            Assert.Equal("Staden som försvann är Stephen Kings andra utgivna roman", result.Description);
+            Assert.False(result.IsRented);
         }
+
     }
+
 }
+

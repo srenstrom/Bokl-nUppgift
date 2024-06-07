@@ -15,7 +15,7 @@ namespace BoklånUppgift.Controllers
     {
         private readonly IBook bookRepo;
 
-        public BooksController( IBook bookRepo)
+        public BooksController(IBook bookRepo)
         {
             
             this.bookRepo = bookRepo;

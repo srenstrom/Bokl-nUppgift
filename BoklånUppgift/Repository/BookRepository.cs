@@ -13,6 +13,11 @@ namespace BoklånUppgift.Repository
         {
             this.applicationDbContext = applicationDbContext;
         }
+
+        public BookRepository()
+        {
+        }
+
         public async Task<List<Book>> GetAllAsync()
         {
             return await applicationDbContext.Books
