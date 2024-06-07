@@ -1,6 +1,11 @@
-﻿using BoklånUppgift.Model;
+﻿using BoklånUppgift.Areas.Identity.Pages.Account;
+using BoklånUppgift.Migrations;
+using BoklånUppgift.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -16,8 +21,10 @@ namespace BoklånUppgift.Test
         {
             private readonly Mock<SignInManager<RentalUser>> _signInManagerMock;
             private readonly Mock<UserManager<RentalUser>> _userManagerMock;
+            private readonly Mock<UserManager<RentalUser>> _userManager;
 
-            public SignInManagerTests()
+       
+        public SignInManagerTests()
             {
                 _userManagerMock = new Mock<UserManager<RentalUser>>(
                     new Mock<IUserStore<RentalUser>>().Object,
@@ -31,7 +38,7 @@ namespace BoklånUppgift.Test
             }
 
             [Fact]
-            public async Task SignInAsync_ShouldSignInUser()
+            public async Task SignInUserTest()
             {
                 // Arrange
                 var user = new RentalUser { UserName = "testuser", Email = "testuser@example.com" };
@@ -47,7 +54,7 @@ namespace BoklånUppgift.Test
                 // Verify that SignInAsync was called with the correct parameters
                 _signInManagerMock.Verify(s => s.CheckPasswordSignInAsync(user, "password", false), Times.Once);
             }
+     
         }
     }
 }
-
