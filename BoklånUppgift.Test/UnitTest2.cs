@@ -87,7 +87,7 @@ namespace BoklånUppgift.Test
         }
 
         [Fact]
-        public async Task GetAllBooksTest()
+        public async Task GetAllAsync_ShouldReturnAllBooks()
         {
             // Arrange
             var bookRepository = new BookRepository(context);
@@ -102,13 +102,15 @@ namespace BoklånUppgift.Test
 
         }
         [Fact]
-        public async Task GetBooksByIdTest()
+        public async Task GetByIdAsync_ShouldReturnBookById()
         {
             // Arrange
             var bookRepository = new BookRepository(context);
             int id = 2;
+
             // Act
             Book result = await bookRepository.GetByIdAsync(id);
+
             // Assert
             Assert.NotNull(result);
             Assert.Equal(2, result.BookId);
